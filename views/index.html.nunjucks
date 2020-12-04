@@ -24,11 +24,18 @@
 
 <div id="content">
     <h1>CSV Splitter!</h1>
-    <div>
-        <input id="file" type="file" name="file">
-    </div>
-    <div>
-        <button id="submit" onclick="submit()">SPLIT!</button>
+    <form id="uploadForm" method="post" enctype="multipart/form-data">
+        <div>
+            <input id="file" type="file" name="file" required>
+        </div>
+        <div>
+            <button id="submit" type="submit" disabled>
+                SPLIT!
+            </button>
+        </div>
+    </form>
+    <div id="error">
+        <small>{{ error | default('') }}</small>
     </div>
 </div>
 

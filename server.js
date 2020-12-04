@@ -8,6 +8,7 @@ const multer = require("multer");
 const readline = require("readline");
 const path = require("path");
 const AdmZip = require("adm-zip");
+const nunjucks = require("nunjucks");
 
 const PUBLIC_DIR = "public";
 const UPLOADS_DIR = ".tmp";
@@ -43,10 +44,21 @@ async function readHeaders(filePath) {
 async function postUpload(req, res) {
     if (!req.file) {
         res.status(400);
-        return res.json({ error: 'Specify a file' });
+        return res.render('index.html.nunjucks', { error: 'No file specified!' });
     }
 
     const origFile = req.file.originalname;
+
+    if (!origFile.endsWith('.csv')) {
+        res.status(400);
+        return res.render('index.html.nunjucks', { error: "That's not a CSV!" });
+    }
+
+    if (req.file.size < 1024**2 * 2) {
+        res.status(400);
+        return res.render('index.html.nunjucks', { error: "The minimum size is 2 MiB" });
+    }
+
     const upload = req.file.path;
     const headers = await readHeaders(upload);
 
@@ -58,11 +70,19 @@ async function postUpload(req, res) {
         crlfDelay: Infinity
     });
 
+
+    let headerLine = true;
     let fileCounter = 0;
     let currentFile = getChunkFileName(origFile, fileCounter);
     let currentFileContent = "";
 
     for await (const line of rl) {
+        // TODO: This is hacky
+        if (headerLine) {
+            headerLine = false;
+            continue;
+        }
+
         if (currentFileContent.length >= SPLIT_SIZE) {
             zip.addFile(
                 currentFile,
@@ -96,6 +116,7 @@ async function postUpload(req, res) {
     await fsPromises.unlink(upload);
 
     // Send the result
+    res.set({ 'Location': '.' });
     res.download(
         path.resolve(zipFileName),
         path.basename(zipFileName),
@@ -107,6 +128,13 @@ app.use(express.static(PUBLIC_DIR));
 app.use(logger("dev"));
 app.use(helmet());
 
-app.post("/upload", uploader.single('file'), postUpload);
+nunjucks.configure("views", {
+    autoescape: true,
+    express: app,
+    watch: process.env.NODE_ENV === 'development'
+});
+
+app.get("/", (req, res) => res.render('index.html.nunjucks'));
+app.post("/", uploader.single('file'), postUpload);
 
 app.listen(port, () => console.log(`Server listening on port ${port}...`));
