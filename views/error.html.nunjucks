@@ -1,0 +1,17 @@
+{% extends "webpage.html.nunjucks" %}
+
+{% block head %}
+
+<title>ERROR</title>
+<link rel="stylesheet" type="text/css" href="./css/error.css">
+
+{% endblock %}
+
+{% block body %}
+
+<div id="content">
+    <div class="error">{{ error | default('') }}</div>
+    <a href=".">Go back</a>
+</div>
+
+{% endblock %}

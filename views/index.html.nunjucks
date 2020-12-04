@@ -1,14 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "webpage.html.nunjucks" %}
 
-<head>
+{% block head %}
     <title>CSV Splitter</title>
     <link rel="stylesheet" type="text/css" href="./css/index.css">
     <link rel="stylesheet" type="text/css" href="./css/spinner.css">
     <script type="text/javascript" src="./index.js"></script>
-</head>
+{% endblock %}
 
-<body>
+{% block body %}
 <div id="loading">
     <div class="lds-roller">
         <div></div>
@@ -39,6 +38,4 @@
     </div>
 </div>
 
-</body>
-
-</html>
+{% endblock %}

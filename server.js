@@ -41,27 +41,28 @@ async function readHeaders(filePath) {
     }));
 }
 
+async function sendError(res, upload, error) {
+    await fsPromises.unlink(upload);
+    return res.redirect(`error?error=${encodeURIComponent(error)}`);
+}
+
 async function postUpload(req, res) {
+    const origFile = req.file.originalname;
+    const upload = req.file.path;
+
     if (!req.file) {
-        res.status(400);
-        return res.render('index.html.nunjucks', { error: 'No file specified!' });
+        return sendError(res, upload, 'No file specified!');
     }
 
-    const origFile = req.file.originalname;
-
     if (!origFile.endsWith('.csv')) {
-        res.status(400);
-        return res.render('index.html.nunjucks', { error: "That's not a CSV!" });
+        return sendError(res, upload, "That's not a CSV!");
     }
 
     if (req.file.size < 1024**2 * 2) {
-        res.status(400);
-        return res.render('index.html.nunjucks', { error: "The minimum size is 2 MiB" });
+        return sendError(res, upload, "The minimum size is 2 MiB");
     }
 
-    const upload = req.file.path;
     const headers = await readHeaders(upload);
-
     const zipFileName = path.join(UPLOADS_DIR, `${splitExit(origFile)[0]}.zip`)
     const zip = new AdmZip();
 
@@ -125,7 +126,7 @@ async function postUpload(req, res) {
 }
 
 app.use(express.static(PUBLIC_DIR));
-app.use(logger("dev"));
+app.use(logger(process.env.NODE_ENV === 'development' ? "dev" : 'combined'));
 app.use(helmet());
 
 nunjucks.configure("views", {
@@ -136,5 +137,12 @@ nunjucks.configure("views", {
 
 app.get("/", (req, res) => res.render('index.html.nunjucks'));
 app.post("/", uploader.single('file'), postUpload);
+app.get("/error", (req, res) => {
+    res.render(
+        'error.html.nunjucks',
+        { error: decodeURIComponent(req.query.error || '') }
+    );
+});
+app.use("*", (req, res) => res.redirect("/"));
 
 app.listen(port, () => console.log(`Server listening on port ${port}...`));
