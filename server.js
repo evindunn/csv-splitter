@@ -8,7 +8,6 @@ const multer = require("multer");
 const readline = require("readline");
 const path = require("path");
 const AdmZip = require("adm-zip");
-const nunjucks = require("nunjucks");
 
 const PUBLIC_DIR = "public";
 const UPLOADS_DIR = ".tmp";
@@ -71,7 +70,6 @@ async function postUpload(req, res) {
         input: fs.createReadStream(upload),
         crlfDelay: Infinity
     });
-
 
     let headerLine = true;
     let fileCounter = 0;
