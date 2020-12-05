@@ -1,4 +1,3 @@
-const csvParser = require("csv-parser");
 const express = require("express");
 const fs = require("fs");
 const fsPromises = fs.promises;
@@ -7,12 +6,13 @@ const logger = require("morgan")
 const multer = require("multer");
 const readline = require("readline");
 const path = require("path");
-const AdmZip = require("adm-zip");
+const archiver = require("archiver");
 
 const PUBLIC_DIR = "public";
 const UPLOADS_DIR = ".tmp";
 const SPLIT_SIZE = 1024**2 * 100; // 100 MiB
 
+const env = process.env.NODE_ENV || 'production';
 const port = parseInt(process.env.PORT) || 8080;
 const app = express();
 const uploader = multer({ dest: UPLOADS_DIR });
@@ -28,16 +28,10 @@ function getChunkFileName(origFile, counter) {
     return `${filePrefix}_${counter}${fileExt}`;
 }
 
-async function readHeaders(filePath) {
-    return new Promise(((resolve, reject) => {
-        const readStream = fs.createReadStream(filePath).pipe(csvParser());
-
-        readStream.on('error', reject);
-        readStream.on('headers', (headers) => {
-            readStream.destroy();
-            resolve(headers);
-        });
-    }));
+function debugLog(msg, ...args) {
+    if (env === 'development') {
+        console.debug(msg, ...args);
+    }
 }
 
 async function sendError(res, upload, error) {
@@ -62,33 +56,34 @@ async function postUpload(req, res) {
         return sendError(res, upload, "The minimum size is 2 MiB");
     }
 
-    const headers = await readHeaders(upload);
-    const zipFileName = path.join(UPLOADS_DIR, `${splitExit(origFile)[0]}.zip`)
-    const zip = new AdmZip();
-
     const rl = readline.createInterface({
         input: fs.createReadStream(upload),
         crlfDelay: Infinity
     });
 
-    let headerLine = true;
+    let headerLine = "";
     let fileCounter = 0;
     let currentFile = getChunkFileName(origFile, fileCounter);
     let currentFileContent = "";
 
+    const zipFileName = path.join(UPLOADS_DIR, `${splitExit(origFile)[0]}.zip`);
+    const zipStream = fs.createWriteStream(zipFileName);
+    const zip = archiver('zip', { zlib: { level: 9 } });
+
+    zip.pipe(zipStream);
+
     for await (const line of rl) {
-        // TODO: This is hacky
-        if (headerLine) {
-            headerLine = false;
+        if (headerLine === "") {
+            headerLine = line;
             continue;
         }
 
         if (currentFileContent.length >= SPLIT_SIZE) {
-            zip.addFile(
-                currentFile,
-                `${headers}\n${currentFileContent}`
+            zip.append(
+                `${headerLine}\n${currentFileContent}`,
+                { name: currentFile }
             );
-            console.log(currentFile);
+            debugLog(currentFile);
 
             fileCounter += 1;
             currentFile = getChunkFileName(origFile, fileCounter);
@@ -101,30 +96,42 @@ async function postUpload(req, res) {
 
     // Last chunk
     if (currentFileContent.length > 0) {
-        zip.addFile(
-            currentFile,
-            `${headers}\n${currentFileContent}`
+        await zip.append(
+            `${headerLine}\n${currentFileContent}`,
+            { name: currentFile }
         );
-        console.log(currentFile);
+        debugLog(currentFile);
     }
 
-    // Create archive
-    zip.writeZip(zipFileName);
-    console.log(`Created ${zipFileName}!`);
+    // Handle zip events
+    zip.on('error', (e) => {
+        console.error(e.message);
+        res.sendStatus(500);
+    });
 
-    // Clean up
-    await fsPromises.unlink(upload);
+    zipStream.on('close', async () => {
+        // Clean up
+        await fsPromises.unlink(upload);
 
-    // Send the result
-    res.download(
-        path.resolve(zipFileName),
-        path.basename(zipFileName),
-        async () => fsPromises.unlink(zipFileName)
-    );
+        // Send the result
+        res.download(
+            path.resolve(zipFileName),
+            path.basename(zipFileName),
+            async () => fsPromises.unlink(zipFileName)
+        );
+    });
+
+    zipStream.on('error', (e) => {
+        console.error(e.message);
+        res.sendStatus(500);
+    });
+
+    // Close the zip file
+    zip.finalize();
 }
 
 app.use(express.static(PUBLIC_DIR));
-app.use(logger(process.env.NODE_ENV === 'development' ? "dev" : 'combined'));
+app.use(logger(env === 'development' ? "dev" : 'combined'));
 app.use(helmet());
 
 app.post("/", uploader.single('file'), postUpload);
