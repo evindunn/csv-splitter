@@ -1,13 +1,16 @@
-{% extends "webpage.html.nunjucks" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block head %}
+<head>
     <title>CSV Splitter</title>
+    <link rel="stylesheet" type="text/css" href="./css/theme.css">
     <link rel="stylesheet" type="text/css" href="./css/index.css">
     <link rel="stylesheet" type="text/css" href="./css/spinner.css">
     <script type="text/javascript" src="./index.js"></script>
-{% endblock %}
+</head>
 
-{% block body %}
+<body>
+
 <div id="loading">
     <div class="lds-roller">
         <div></div>
@@ -23,19 +26,18 @@
 
 <div id="content">
     <h1>CSV Splitter!</h1>
-    <form id="uploadForm" method="post" enctype="multipart/form-data">
-        <div>
-            <input id="file" type="file" name="file" required>
-        </div>
-        <div>
-            <button id="submit" type="submit" disabled>
-                SPLIT!
-            </button>
-        </div>
-    </form>
-    <div id="error">
-        <small>{{ error | default('') }}</small>
+    <div>
+        <input id="file" type="file" name="file" required>
     </div>
+    <div>
+        <button id="submit" type="submit" disabled>
+            SPLIT!
+        </button>
+    </div>
+
+    <small id="error"></small>
 </div>
 
-{% endblock %}
+</body>
+
+</html>

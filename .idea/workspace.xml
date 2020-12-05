@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="71349c35-7a74-4d55-a59c-e1214881baf4" name="Default Changelist" comment="" />
+    <list default="true" id="71349c35-7a74-4d55-a59c-e1214881baf4" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/error.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/theme.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/error.html.nunjucks" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/index.html.nunjucks" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/webpage.html.nunjucks" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1lAHHTLjE37tWGBwJpj8bY3WIWi" />
   <component name="ProjectViewState">
@@ -13,6 +26,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="javascript.nodejs.core.library.configured.version" value="12.19.0" />
@@ -24,6 +38,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/views" />
     </key>
   </component>
@@ -47,7 +62,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1607032889710</updated>
-      <workItem from="1607032891008" duration="12914000" />
+      <workItem from="1607032891008" duration="13576000" />
+      <workItem from="1607182064760" duration="1676000" />
     </task>
     <servers />
   </component>
@@ -59,25 +75,29 @@
       <screen x="0" y="27" width="2560" height="1053" />
     </state>
     <state x="98" y="211" width="1084" height="712" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.27.2560.1053@0.27.2560.1053" timestamp="1607035605346" />
-    <state width="1232" height="258" key="GridCell.Tab.0.bottom" timestamp="1607044854301">
+    <state width="1222" height="258" key="GridCell.Tab.0.bottom" timestamp="1607182193974">
       <screen x="0" y="27" width="2560" height="1053" />
     </state>
-    <state width="1232" height="258" key="GridCell.Tab.0.bottom/0.27.2560.1053@0.27.2560.1053" timestamp="1607044854301" />
-    <state width="1232" height="258" key="GridCell.Tab.0.center" timestamp="1607044854301">
+    <state width="1222" height="258" key="GridCell.Tab.0.bottom/0.27.2560.1053@0.27.2560.1053" timestamp="1607182193974" />
+    <state width="1222" height="258" key="GridCell.Tab.0.center" timestamp="1607182193973">
       <screen x="0" y="27" width="2560" height="1053" />
     </state>
-    <state width="1232" height="258" key="GridCell.Tab.0.center/0.27.2560.1053@0.27.2560.1053" timestamp="1607044854301" />
-    <state width="1232" height="258" key="GridCell.Tab.0.left" timestamp="1607044854301">
+    <state width="1222" height="258" key="GridCell.Tab.0.center/0.27.2560.1053@0.27.2560.1053" timestamp="1607182193973" />
+    <state width="1222" height="258" key="GridCell.Tab.0.left" timestamp="1607182193973">
       <screen x="0" y="27" width="2560" height="1053" />
     </state>
-    <state width="1232" height="258" key="GridCell.Tab.0.left/0.27.2560.1053@0.27.2560.1053" timestamp="1607044854301" />
-    <state width="1232" height="258" key="GridCell.Tab.0.right" timestamp="1607044854301">
+    <state width="1222" height="258" key="GridCell.Tab.0.left/0.27.2560.1053@0.27.2560.1053" timestamp="1607182193973" />
+    <state width="1222" height="258" key="GridCell.Tab.0.right" timestamp="1607182193973">
       <screen x="0" y="27" width="2560" height="1053" />
     </state>
-    <state width="1232" height="258" key="GridCell.Tab.0.right/0.27.2560.1053@0.27.2560.1053" timestamp="1607044854301" />
+    <state width="1222" height="258" key="GridCell.Tab.0.right/0.27.2560.1053@0.27.2560.1053" timestamp="1607182193973" />
     <state x="291" y="161" key="StringManipulation.SortTypeDialog" timestamp="1607033753731">
       <screen x="0" y="27" width="2560" height="1053" />
     </state>
     <state x="291" y="161" key="StringManipulation.SortTypeDialog/0.27.2560.1053@0.27.2560.1053" timestamp="1607033753731" />
+    <state x="298" y="259" width="672" height="678" key="search.everywhere.popup" timestamp="1607183465926">
+      <screen x="0" y="27" width="2560" height="1053" />
+    </state>
+    <state x="298" y="259" width="672" height="678" key="search.everywhere.popup/0.27.2560.1053@0.27.2560.1053" timestamp="1607183465926" />
   </component>
 </project>

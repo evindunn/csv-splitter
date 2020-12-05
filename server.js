@@ -43,7 +43,8 @@ async function readHeaders(filePath) {
 
 async function sendError(res, upload, error) {
     await fsPromises.unlink(upload);
-    return res.redirect(`error?error=${encodeURIComponent(error)}`);
+    res.status(400);
+    return res.json({ error });
 }
 
 async function postUpload(req, res) {
@@ -117,7 +118,6 @@ async function postUpload(req, res) {
     await fsPromises.unlink(upload);
 
     // Send the result
-    res.set({ 'Location': '.' });
     res.download(
         path.resolve(zipFileName),
         path.basename(zipFileName),
@@ -129,20 +129,6 @@ app.use(express.static(PUBLIC_DIR));
 app.use(logger(process.env.NODE_ENV === 'development' ? "dev" : 'combined'));
 app.use(helmet());
 
-nunjucks.configure("views", {
-    autoescape: true,
-    express: app,
-    watch: process.env.NODE_ENV === 'development'
-});
-
-app.get("/", (req, res) => res.render('index.html.nunjucks'));
 app.post("/", uploader.single('file'), postUpload);
-app.get("/error", (req, res) => {
-    res.render(
-        'error.html.nunjucks',
-        { error: decodeURIComponent(req.query.error || '') }
-    );
-});
-app.use("*", (req, res) => res.redirect("/"));
 
 app.listen(port, () => console.log(`Server listening on port ${port}...`));
